@@ -1,0 +1,5 @@
+vendor/
+.workspace/
+.DS_Store
+.env
+.vscode/

@@ -1,0 +1,27 @@
+{
+    "name": "drewlabs/envoyer-infobip",
+    "description": "Infobip SMS gateway envoyer driver",
+    "type": "library",
+    "require": {
+        "php": ">=7.0",
+        "drewlabs/envoyer-contracts": "^0.2.4",
+        "drewlabs/curl-client": "^0.4.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": ">=6.0",
+        "drewlabs/envoyer": "^0.2.4"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Drewlabs\\Envoyer\\Drivers\\Infobip\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "azandrew-sidoine",
+            "email": "azandrewdevelopper@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable"
+}

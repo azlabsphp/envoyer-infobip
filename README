@@ -1,0 +1,23 @@
+# Envoyer - Infobip driver
+
+This package provide `drewlabs/envoyer` driver for sending message using InfoBip [https://www.infobip.com] messages API gateway.
+
+## Usage
+
+The library offer a simplement interface for sending message through the `sendRequest` method as follow:
+
+```php
+
+// Register package using composer autoloader
+// require __DIR__ . '/../vendor/autoload.php';
+
+use Drewlabs\Envoyer\Drivers\Infobip\Driver;
+use Drewlabs\Envoyer\Message;
+
+
+$driver = new Driver('<YOUR_HOST>');
+
+$result = $driver->withAPIKey('<YOUR_API_KEY>')
+    ->sendRequest(Message::new('<RECIPIENT_PHONE_NUMBER>', 'Enoyer - welcome to the world of all possibilities!')
+        ->from('My App'));
+```
