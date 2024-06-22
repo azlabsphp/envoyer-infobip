@@ -77,6 +77,6 @@ class Driver implements ClientInterface
         if (($statusCode  = $response->getStatusCode()) && (200 > $statusCode || 204 < $statusCode)) {
             throw new RequestException(sprintf("/POST /sms/2/text/advanced fails with status %d -  %s", $statusCode, $response->getBody()));
         }
-		return Message::fromJson($response->json()->getBody());
+		return Result::fromJson($response->json()->getBody());
     }
 }

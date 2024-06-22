@@ -4,7 +4,7 @@ namespace Drewlabs\Envoyer\Drivers\Infobip;
 
 use Drewlabs\Envoyer\Contracts\NotificationResult;
 
-class Message implements NotificationResult
+class Result implements NotificationResult
 {
 
     /** @var string */
