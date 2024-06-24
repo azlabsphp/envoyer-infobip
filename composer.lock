@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5169e5d7efae1b301259cbd89117d3e8",
+    "content-hash": "1271f202590f4bf262c6567fba7bae2b",
     "packages": [
         {
             "name": "drewlabs/curl-client",
