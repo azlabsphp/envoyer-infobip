@@ -18,18 +18,23 @@ class Driver implements ClientInterface
     /** @var string */
     private $apiKey;
 
+    /** @var string */
+    private $callback_url;
+
     /**
      * Creates new class instance
      * 
      * @param string $endpoint
-     * @param string $apiKey
+     * @param null|string $apiKey
+     * @param null|string $callback_url
      *
      * @return void
      */
-    public function __construct(string $endpoint, string $apiKey = null)
+    public function __construct(string $endpoint, string $apiKey = null, string $callback_url = null)
     {
         # code...
         $this->apiKey = $apiKey;
+        $this->callback_url = $callback_url;
         $this->curl = new Curl(rtrim($endpoint, '/'));
     }
 
@@ -38,11 +43,12 @@ class Driver implements ClientInterface
      * 
      * @param string $endpoint 
      * @param string|null $apiKey 
+     * @param null|string $callback_url
      * @return static 
      */
-    public static function new(string $endpoint, string $apiKey = null)
+    public static function new(string $endpoint, string $apiKey = null, string $callback_url)
     {
-        return new static($endpoint, $apiKey);
+        return new static($endpoint, $apiKey, $callback_url);
     }
 
     /**
@@ -60,6 +66,20 @@ class Driver implements ClientInterface
         return $self;
     }
 
+    /**
+     * Copy current instance and update the it `callback_url` property
+     * 
+     * @param string $url 
+     * @return static 
+     */
+    public function withCallbackUrl(string $url)
+    {
+        $self = clone $this;
+        $self->callback_url = $url;
+
+        return $self;
+    }
+
     public function sendRequest(NotificationInterface $instance): NotificationResult
     {
         $response = $this->sendHTTPRequest($this->curl, '/sms/2/text/advanced', 'POST', [
@@ -67,7 +87,8 @@ class Driver implements ClientInterface
                 [
                     "destinations" => [["to" => $instance->getReceiver()->__toString()]],
                     "from" => $instance->getSender()->__toString(),
-                    "text" => strval($instance->getContent())
+                    "text" => strval($instance->getContent()),
+                    "webhooks" => $this->callback_url ? ["delivery" => ["url" => $this->callback_url]] : [],
                 ]
             ]
         ], [
@@ -77,6 +98,6 @@ class Driver implements ClientInterface
         if (($statusCode  = $response->getStatusCode()) && (200 > $statusCode || 204 < $statusCode)) {
             throw new RequestException(sprintf("/POST /sms/2/text/advanced fails with status %d -  %s", $statusCode, $response->getBody()));
         }
-		return Result::fromJson($response->json()->getBody());
+        return Result::fromJson($response->json()->getBody());
     }
 }
