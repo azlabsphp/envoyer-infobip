@@ -18,7 +18,7 @@ class Driver implements ClientInterface
     /** @var string */
     private $apiKey;
 
-    /** @var string */
+    /** @var null|string|callable */
     private $callback_url;
 
     /**
@@ -26,11 +26,11 @@ class Driver implements ClientInterface
      * 
      * @param string $endpoint
      * @param null|string $apiKey
-     * @param null|string $callback_url
+     * @param null|string|callable $callback_url
      *
      * @return void
      */
-    public function __construct(string $endpoint, string $apiKey = null, string $callback_url = null)
+    public function __construct(string $endpoint, string $apiKey = null, $callback_url = null)
     {
         # code...
         $this->apiKey = $apiKey;
@@ -43,10 +43,11 @@ class Driver implements ClientInterface
      * 
      * @param string $endpoint 
      * @param string|null $apiKey 
-     * @param null|string $callback_url
+     * @param null|string|callable $callback_url
+     * 
      * @return static 
      */
-    public static function new(string $endpoint, string $apiKey = null, string $callback_url = null)
+    public static function new(string $endpoint, string $apiKey = null, $callback_url = null)
     {
         return new static($endpoint, $apiKey, $callback_url);
     }
@@ -69,10 +70,10 @@ class Driver implements ClientInterface
     /**
      * Copy current instance and update the it `callback_url` property
      * 
-     * @param string $url 
+     * @param string|callable $url 
      * @return static 
      */
-    public function withCallbackUrl(string $url)
+    public function withCallbackUrl($url)
     {
         $self = clone $this;
         $self->callback_url = $url;
@@ -82,15 +83,19 @@ class Driver implements ClientInterface
 
     public function sendRequest(NotificationInterface $instance): NotificationResult
     {
+        $callback = is_callable($this->callback_url) ? call_user_func($this->callback_url, $instance) : $this->callback_url;
+
+        printf("Callback: %s\n", $callback);
+
         $response = $this->sendHTTPRequest($this->curl, '/sms/2/text/advanced', 'POST', [
             "messages" => [
                 [
                     "destinations" => [["to" => $instance->getReceiver()->__toString()]],
                     "from" => $instance->getSender()->__toString(),
                     "text" => strval($instance->getContent()),
-                    "notifyUrl" => $this->callback_url ?? null,
+                    "notifyUrl" => $callback ?? null,
                     "notifyContentType" => "application/json",
-                    "webhooks" => $this->callback_url ? ["delivery" => ["url" => $this->callback_url]] : [],
+                    "webhooks" => $callback ? ["delivery" => ["url" => $callback]] : [],
                 ]
             ]
         ], [
