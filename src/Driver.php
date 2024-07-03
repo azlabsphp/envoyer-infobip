@@ -88,6 +88,8 @@ class Driver implements ClientInterface
                     "destinations" => [["to" => $instance->getReceiver()->__toString()]],
                     "from" => $instance->getSender()->__toString(),
                     "text" => strval($instance->getContent()),
+                    "notifyUrl" => $this->callback_url ?? null,
+                    "notifyContentType" => "application/json",
                     "webhooks" => $this->callback_url ? ["delivery" => ["url" => $this->callback_url]] : [],
                 ]
             ]
