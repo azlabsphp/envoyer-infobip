@@ -100,6 +100,19 @@ class Driver implements ClientInterface
         if (($statusCode  = $response->getStatusCode()) && (200 > $statusCode || 204 < $statusCode)) {
             throw new RequestException(sprintf("/POST /sms/2/text/advanced fails with status %d -  %s", $statusCode, $response->getBody()));
         }
-        return Result::fromJson($response->json()->getBody());
+        return Result::fromJson(static::firstOfKeyOrEmpty($response->json()->getBody(), 'messages'));
+    }
+
+    /**
+     * Returns the first message in the list of messages if messages not empty
+     * 
+     * @param array $values
+     * @param string $key
+     * @return array 
+     */
+    private static function firstOfKeyOrEmpty(array $values, string $key)
+    {
+        $messages = array_values($values[$key] ?? []);
+        return $messages[0] ?? [];
     }
 }

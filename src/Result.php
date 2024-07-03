@@ -36,8 +36,7 @@ class Result implements NotificationResult
 
     public static function fromJson(array $attributes)
     { 
-        $message = static::getFirstMessage($attributes);
-        return new static($message['messageId'] ?? null, date('Y-m-d H:i:s'), in_array(strtoupper($message['status']['name'] ?? ''), self::DELIVERED_STATUS));
+        return new static($attributes['messageId'] ?? null, isset($attributes['sentAt']) ? date('Y-m-d H:i:s', strtotime($attributes['sentAt'])) : date('Y-m-d H:i:s'), in_array(strtoupper($attributes['status']['name'] ?? ''), self::DELIVERED_STATUS));
     }
 
     public function date()
@@ -53,17 +52,5 @@ class Result implements NotificationResult
     public function isOk()
     {
         return $this->ok;
-    }
-
-    /**
-     * Returns the first message in the list of messages if messages not empty
-     * 
-     * @param array $values 
-     * @return array 
-     */
-    private static function getFirstMessage(array $values)
-    {
-        $messages = array_values($values['messages'] ?? []);
-        return $messages[0] ?? [];
     }
 }
