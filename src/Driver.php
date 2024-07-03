@@ -46,7 +46,7 @@ class Driver implements ClientInterface
      * @param null|string $callback_url
      * @return static 
      */
-    public static function new(string $endpoint, string $apiKey = null, string $callback_url)
+    public static function new(string $endpoint, string $apiKey = null, string $callback_url = null)
     {
         return new static($endpoint, $apiKey, $callback_url);
     }
