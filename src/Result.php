@@ -27,7 +27,7 @@ class Result implements NotificationResult
      * @param string|null $date 
      * @param bool $ok 
      */
-    public function __construct(string $id = null, string $date = null, bool $ok = true)
+    public function __construct(?string $id = null, ?string $date = null, bool $ok = true)
     {
         $this->id = $id;
         $this->date = $date;

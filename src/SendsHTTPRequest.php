@@ -20,7 +20,7 @@ trait SendsHTTPRequest
      * @param array $body 
      * @param array $headers 
      * @return Response 
-     * @throws RuntimeException 
+     * @throws \RuntimeException 
      * @throws RequestException 
      */
     private function sendHTTPRequest(Curl $curl, string $endpoint, string $method = 'GET', array $body = [], array $headers = []): Response
@@ -31,10 +31,7 @@ trait SendsHTTPRequest
         $curl->send([
             'method' => $method,
             'url' => $endpoint,
-            'headers' => array_merge([
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json',
-            ], $headers ?? []),
+            'headers' => array_merge(['Content-Type' => 'application/json', 'Accept' => 'application/json' ], $headers ?? []),
             'body' => $body
         ]);
 

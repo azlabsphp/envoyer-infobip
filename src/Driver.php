@@ -30,7 +30,7 @@ class Driver implements ClientInterface
      *
      * @return void
      */
-    public function __construct(string $endpoint, string $apiKey = null, $callback_url = null)
+    public function __construct(string $endpoint, ?string $apiKey = null, $callback_url = null)
     {
         # code...
         $this->apiKey = $apiKey;
@@ -47,7 +47,7 @@ class Driver implements ClientInterface
      * 
      * @return static 
      */
-    public static function new(string $endpoint, string $apiKey = null, $callback_url = null)
+    public static function new(string $endpoint, ?string $apiKey = null, $callback_url = null)
     {
         return new static($endpoint, $apiKey, $callback_url);
     }
